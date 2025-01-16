@@ -1,0 +1,95 @@
+def add_time(start, duration, day = False):
+
+    First_Time = []
+    Sec_Time = []
+    Hours = []
+    Hours2 = []
+    
+    if(start.find('PM')> 0 ):
+         hours_pm = 12
+         
+    else:
+         hours_pm = 0
+         
+
+    for x in start:
+        if x.isnumeric():
+            First_Time.append(x)
+    for y in duration:
+            if y.isnumeric():
+                Sec_Time.append(y)
+     
+    mins = int(First_Time[-2]+First_Time[-1])+int(Sec_Time[-2]+(Sec_Time[-1]))
+    x = 0
+    while(x < len(First_Time)-2):
+         Hours.append(First_Time[x])
+         x += 1
+    x = 0
+    while(x <len(Sec_Time)-2):
+         Hours2.append(Sec_Time[x]) 
+         x += 1
+    New_hours = int(''.join(Hours))+int(''.join(Hours2)) + hours_pm
+
+    while(mins >= 60):
+         New_hours += 1
+         mins = mins - 60
+
+    day_counts = int(New_hours/24)
+    new_min  = ''
+    if(mins < 10):
+         new_min = '0'+str(mins)
+    else:
+         new_min = mins
+    
+    final_hours = round((New_hours/24 - int(New_hours/24)) * 24)
+    output = ''
+    new_day = ''
+   
+    if(New_hours > 24 and New_hours < 48):
+         if( day == False):
+               output = time_format_out(final_hours, new_min)+' '+'(next day)'
+         else:
+               new_day = day_finder(day, day_counts)
+               output = time_format_out(final_hours, new_min)+', '+new_day+' (next day)'     
+    elif(New_hours >= 48):
+          if( day == False):
+               output = time_format_out(final_hours,new_min)+' '+f'({day_counts} days later)'
+          else:
+               new_day = day_finder(day, day_counts)
+               output = time_format_out(final_hours,new_min)+', '+new_day+f' ({day_counts} days later)'    
+    else:
+          if(day == False):
+               output = time_format_out(final_hours,new_min)
+          else:
+               new_day = day_finder(day, day_counts)
+               output = time_format_out(final_hours,new_min)+', '+new_day
+    
+    return output
+
+def time_format_out(final_hours, new_min):
+
+     if(final_hours >= 12):
+          if(final_hours> 12):
+               final_out = str(final_hours - 12)+':'+str(new_min)+' PM'
+          else:
+               final_out = str(final_hours)+':'+str(new_min)+' PM'
+     else:
+          if(final_hours == 0 or final_hours == 24):
+               final_out = '12:'+str(new_min)+' '+'AM'
+          else:
+               final_out = str(final_hours)+':'+str(new_min)+' AM' 
+     return final_out
+
+
+def day_finder(day, day_counts):
+     days_1 = ['sunday' , 'monday', 'tuesday' , 'wednesday', 'thursday' , 'friday', 'saturday']
+     for x1 in days_1:
+               if(day.lower() == x1): 
+                    y1 = days_1.index(x1) + day_counts
+                    print(y1)
+                    while (y1 >= 7):
+                         y1 = y1 - 7            
+                    new_day = days_1[y1].capitalize()
+     return new_day
+
+#add_time("11:59 AM", "00:01")
